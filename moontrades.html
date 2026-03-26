@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moon Trades | #1 Options Trading Community | To The Moon</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* =========================================
+   CORE SETUP & CSS VARIABLES
+   ========================================= */
+:root {
+    --space-dark: #030014;
+    --space-light: #0b0f24;
+    --neon-purple: #b300ff;
+    --neon-blue: #00d0ff;
+    --neon-green: #00ff88;
+    --card-bg: rgba(11, 15, 36, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    background-color: var(--space-dark); 
+    color: #cbd5e1; 
+    font-family: 'Space Grotesk', sans-serif; 
+    overflow-x: hidden;
+}
+
+/* =========================================
+   TYPOGRAPHY
+   ========================================= */
+.font-orbitron { font-family: 'Orbitron', sans-serif; }
+.font-inter { font-family: 'Inter', sans-serif; }
+
+.text-gradient-purple {
+    background: linear-gradient(135deg, #b300ff 0%, #00d0ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.text-gradient-green {
+    background: linear-gradient(135deg, #00ff88 0%, #00d0ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* =========================================
+   BACKGROUNDS & TEXTURES
+   ========================================= */
+.stars-bg {
+    background-image: 
+        radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 40px 70px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 120px, #ffffff, rgba(0,0,0,0));
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: drift 100s linear infinite;
+}
+
+.glow-orb-purple {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(179,0,255,0.15) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+}
+.glow-orb-blue {
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,208,255,0.1) 0%, rgba(0,0,0,0) 70%);
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR
+   ========================================= */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--space-dark); }
+::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-purple); }
+
+/* =========================================
+   KEYFRAME ANIMATIONS
+   ========================================= */
+@keyframes drift { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes pulse-neon {
+    0%, 100% { box-shadow: 0 0 10px rgba(179,0,255,0.2), inset 0 0 10px rgba(179,0,255,0.1); }
+    50% { box-shadow: 0 0 25px rgba(179,0,255,0.6), inset 0 0 15px rgba(179,0,255,0.3); }
+}
+@keyframes slide-ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* =========================================
+   UTILITY & COMPONENT CLASSES
+   ========================================= */
+.ticker-wrap { animation: slide-ticker 35s linear infinite; }
+.floating { animation: float 6s ease-in-out infinite; }
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+}
+.card-hover { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.card-hover:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(179,0,255,0.4);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(179,0,255,0.15);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, #b300ff, #7000ff);
+    color: white;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(179,0,255,0.3);
+}
+.btn-primary::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, #00d0ff, #b300ff);
+    z-index: -1; transition: all 0.4s ease;
+}
+.btn-primary:hover::before { left: 0; }
+.btn-primary:hover { box-shadow: 0 0 30px rgba(0,208,255,0.5); transform: translateY(-2px); }
+
+/* SCROLL REVEAL FRAMEWORK */
+.reveal { opacity: 0; transform: translateY(40px); transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+.delay-100 { transition-delay: 0.1s; }
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+</style>
+</head>
+<body class="relative">
+
+<div class="fixed inset-0 stars-bg z-[-2]"></div>
+<div class="fixed inset-0 bg-gradient-to-b from-transparent via-[#030014]/80 to-[#030014] z-[-1]"></div>
+
+<div class="w-full bg-[#0b0f24] border-b border-[rgba(255,255,255,0.05)] py-2 overflow-hidden relative z-50">
+    <div class="flex whitespace-nowrap ticker-wrap items-center">
+        <div class="flex items-center gap-8 px-4 font-orbitron text-[10px] uppercase tracking-widest text-gray-400">
+            <span class="text-white"><i class="fa-solid fa-rocket text-[#b300ff]"></i> MOON TRADES</span> •
+            <span class="text-[#00ff88]">SPY CALLS +145%</span> •
+            <span>EXPERT OPTIONS ALERTS</span> •
+            <span class="text-[#00d0ff]">SMALL ACCOUNT FRIENDLY</span> •
+            <span>EXACT ENTRIES & EXITS</span> •
+            <span class="text-[#00ff88]">QQQ PUTS +210%</span> •
+            <span>ACTIVE LIVE CHAT</span> •
+        </div>
+        <div class="flex items-center gap-8 px-4 font-orbitron text-[10px] uppercase tracking-widest text-gray-400">
+            <span class="text-white"><i class="fa-solid fa-rocket text-[#b300ff]"></i> MOON TRADES</span> •
+            <span class="text-[#00ff88]">SPY CALLS +145%</span> •
+            <span>EXPERT OPTIONS ALERTS</span> •
+            <span class="text-[#00d0ff]">SMALL ACCOUNT FRIENDLY</span> •
+            <span>EXACT ENTRIES & EXITS</span> •
+            <span class="text-[#00ff88]">QQQ PUTS +210%</span> •
+            <span>ACTIVE LIVE CHAT</span> •
+        </div>
+    </div>
+</div>
+
+<nav id="navbar" class="fixed w-full z-40 transition-all duration-500 py-4 top-[32px] border-b border-transparent">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center glass-card px-6 py-3 rounded-full">
+            
+            <a href="#" class="flex items-center gap-3 group no-underline">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#b300ff] to-[#00d0ff] flex items-center justify-center shadow-[0_0_15px_rgba(179,0,255,0.4)] group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-moon text-white text-lg"></i>
+                </div>
+                <span class="font-orbitron font-bold text-white text-xl tracking-wider group-hover:text-[#00d0ff] transition-colors">MOON TRADES</span>
+            </a>
+
+            <div class="hidden lg:flex items-center gap-8">
+                <a href="#about" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">The Mission</a>
+                <a href="#features" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Arsenal</a>
+                <a href="#reviews" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Testimonials</a>
+                <a href="#pricing" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Pricing</a>
+            </div>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="https://whop.com/moontrades?a=digitalartlab" target="_blank" class="text-sm font-bold text-gray-300 hover:text-white transition-all px-4">Login</a>
+                <a href="#pricing" class="btn-primary px-6 py-2.5 rounded-full font-bold text-sm tracking-wide">
+                    JOIN THE FLIGHT <i class="fa-solid fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <button id="menu-btn" class="lg:hidden text-white focus:outline-none text-2xl">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="lg:hidden absolute top-full left-4 right-4 mt-2 glass-card rounded-2xl hidden flex-col overflow-hidden">
+        <a href="#about" class="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] text-gray-300 hover:text-white hover:bg-[rgba(255,255,255,0.05)]">The Mission</a>
+        <a href="#features" class="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] text-gray-300 hover:text-white hover:bg-[rgba(255,255,255,0.05)]">Arsenal</a>
+        <a href="#reviews" class="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] text-gray-300 hover:text-white hover:bg-[rgba(255,255,255,0.05)]">Testimonials</a>
+        <a href="https://whop.com/moontrades?a=digitalartlab" class="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] text-[#00d0ff] font-bold">Member Login</a>
+        <a href="#pricing" class="px-6 py-4 text-center bg-gradient-to-r from-[#b300ff] to-[#00d0ff] text-white font-bold">JOIN THE FLIGHT</a>
+    </div>
+</nav>
+
+<section class="relative min-h-screen flex items-center justify-center pt-32 pb-20 overflow-hidden">
+    
+    <div class="glow-orb-purple top-1/4 left-[-10%]"></div>
+    <div class="glow-orb-blue bottom-10 right-[-10%]"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        
+        <div class="text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[rgba(0,208,255,0.3)] bg-[rgba(0,208,255,0.1)] mb-8 reveal">
+                <span class="w-2 h-2 rounded-full bg-[#00d0ff] animate-pulse"></span>
+                <span class="text-xs font-bold text-[#00d0ff] tracking-widest uppercase font-orbitron">Now Boarding: Next Profitable Trade</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-orbitron font-black text-white leading-tight mb-6 reveal delay-100">
+                STOP GUESSING. <br>
+                START <span class="text-gradient-purple">MOONING.</span>
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-400 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed reveal delay-200">
+                Join the ultimate Options Trading Discord. We provide exact entry and exit callouts, risk management strategies, and real-time guidance to help you double your small account. <strong class="text-white">Let Moon take you to the moon.</strong>
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 reveal delay-300">
+                <a href="#pricing" class="w-full sm:w-auto px-8 py-4 btn-primary rounded-xl font-orbitron font-bold text-lg text-center flex justify-center items-center gap-3">
+                    <i class="fa-solid fa-rocket"></i> GET FULL ACCESS
+                </a>
+                <a href="#reviews" class="w-full sm:w-auto px-8 py-4 rounded-xl border border-[rgba(255,255,255,0.1)] bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] text-white font-bold text-lg transition-all text-center flex justify-center items-center gap-3">
+                    <i class="fa-solid fa-star text-yellow-400"></i> READ REVIEWS
+                </a>
+            </div>
+
+            <div class="mt-12 flex items-center justify-center lg:justify-start gap-6 reveal delay-300">
+                <div class="flex -space-x-4">
+                    <img class="w-10 h-10 border-2 border-[#030014] rounded-full" src="https://i.pravatar.cc/100?img=1" alt="Member">
+                    <img class="w-10 h-10 border-2 border-[#030014] rounded-full" src="https://i.pravatar.cc/100?img=2" alt="Member">
+                    <img class="w-10 h-10 border-2 border-[#030014] rounded-full" src="https://i.pravatar.cc/100?img=3" alt="Member">
+                    <div class="w-10 h-10 border-2 border-[#030014] rounded-full bg-[#2a2a4a] flex items-center justify-center text-xs font-bold text-white">+2K</div>
+                </div>
+                <div class="text-sm">
+                    <div class="flex text-yellow-400 text-xs mb-1">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <span class="text-gray-400 font-medium">5.0/5.0 on Whop</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="relative hidden lg:block reveal delay-200">
+            <div class="absolute inset-0 bg-gradient-to-tr from-[#b300ff] to-[#00d0ff] rounded-full blur-[80px] opacity-30 floating"></div>
+            
+            <div class="relative z-10 glass-card p-6 border border-[#b300ff]/30 shadow-[0_0_50px_rgba(179,0,255,0.2)] floating transform rotate-[-2deg]">
+                <div class="flex items-center justify-between border-b border-gray-700 pb-4 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#b300ff] flex items-center justify-center text-white text-xs"><i class="fa-solid fa-moon"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm leading-none">Moon Trades <i class="fa-solid fa-circle-check text-blue-400 text-xs ml-1"></i></h4>
+                            <span class="text-gray-500 text-[10px]"># alerts-channel</span>
+                        </div>
+                    </div>
+                    <span class="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded">LIVE</span>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="bg-[#0b0f24] p-4 rounded-lg border border-gray-800">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-[#b300ff]/20 text-[#b300ff] font-bold text-xs px-2 py-1 rounded uppercase">New Alert</span>
+                            <span class="text-gray-500 text-[10px]">Today at 9:32 AM</span>
+                        </div>
+                        <p class="text-white font-orbitron text-lg font-bold mb-1">BTO $SPY 510 CALLS @ 1.45</p>
+                        <p class="text-gray-400 text-xs mb-3">Risk: Medium | Scale out at 20%, 40%</p>
+                        <div class="flex gap-2">
+                            <span class="px-2 py-1 bg-green-500/10 text-green-400 text-[10px] border border-green-500/30 rounded">SL: 1.10</span>
+                            <span class="px-2 py-1 bg-blue-500/10 text-blue-400 text-[10px] border border-blue-500/30 rounded">PT1: 1.70</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-[#0b0f24] p-4 rounded-lg border border-green-500/30 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 bottom-0 w-1 bg-green-500"></div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="bg-green-500/20 text-green-400 font-bold text-xs px-2 py-1 rounded uppercase">Update</span>
+                            <span class="text-gray-500 text-[10px]">Today at 9:45 AM</span>
+                        </div>
+                        <p class="text-white font-orbitron text-lg font-bold mb-1">$SPY RUNNING! +45% 🚀</p>
+                        <p class="text-gray-400 text-xs">Trim your position here. Move Stop Loss to breakeven. Free ride!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<section class="border-y border-[rgba(255,255,255,0.05)] bg-[rgba(11,15,36,0.8)] backdrop-blur-lg relative z-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 lg:grid-cols-4 divide-x divide-[rgba(255,255,255,0.05)]">
+            <div class="p-8 text-center reveal">
+                <div class="font-orbitron text-4xl lg:text-5xl text-white font-bold mb-2">200+</div>
+                <div class="font-inter text-xs text-gray-400 uppercase tracking-widest font-semibold">5-Star Reviews</div>
+            </div>
+            <div class="p-8 text-center reveal delay-100">
+                <div class="font-orbitron text-4xl lg:text-5xl text-white font-bold mb-2">Daily</div>
+                <div class="font-inter text-xs text-gray-400 uppercase tracking-widest font-semibold">Live Trade Alerts</div>
+            </div>
+            <div class="p-8 text-center reveal delay-200">
+                <div class="font-orbitron text-4xl lg:text-5xl text-[#00ff88] font-bold mb-2">80%+</div>
+                <div class="font-inter text-xs text-gray-400 uppercase tracking-widest font-semibold">Historical Win Rate</div>
+            </div>
+            <div class="p-8 text-center reveal delay-300">
+                <div class="font-orbitron text-4xl lg:text-5xl text-[#00d0ff] font-bold mb-2">24/7</div>
+                <div class="font-inter text-xs text-gray-400 uppercase tracking-widest font-semibold">Active Community Help</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="about" class="py-24 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            
+            <div class="relative reveal">
+                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=1000&auto=format&fit=crop" alt="Trading Charts" class="rounded-2xl border border-[rgba(255,255,255,0.1)] shadow-[0_0_40px_rgba(0,0,0,0.8)] opacity-70 filter contrast-125">
+                <div class="absolute -bottom-6 -right-6 glass-card p-4 border-red-500/30 hidden md:block floating" style="animation-delay: 1s;">
+                    <div class="text-red-400 text-sm font-bold mb-1"><i class="fa-solid fa-arrow-trend-down"></i> Retail Trader</div>
+                    <div class="text-white text-xl font-orbitron">- $1,250.00</div>
+                    <div class="text-gray-500 text-xs mt-1">Trading blind on emotions</div>
+                </div>
+            </div>
+
+            <div class="reveal delay-100">
+                <h2 class="text-[#b300ff] font-bold tracking-widest uppercase text-sm mb-3">The Retail Slaughterhouse</h2>
+                <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white mb-6 leading-tight">
+                    LOST IN SPACE? <br>WE PROVIDE THE <span class="text-gradient-blue">COORDINATES.</span>
+                </h3>
+                
+                <p class="text-gray-400 mb-6 leading-relaxed">
+                    Trading Options without a plan is like navigating a spaceship blindfolded. Most retail traders blow their accounts because they don't know when to enter, when to take profits, or how to manage risk when a trade goes against them.
+                </p>
+                <p class="text-gray-400 mb-8 leading-relaxed">
+                    <strong class="text-white">Moon Trades changes the game.</strong> We are not just a signal group; we are an educational powerhouse. When Moon posts a trade, you get the exact strike price, expiration, entry zone, and strict stop-loss levels. You learn *while* you earn.
+                </p>
+
+                <ul class="space-y-4">
+                    <li class="flex items-start gap-4 p-3 glass-card border-l-4 border-l-[#b300ff]">
+                        <div class="mt-1 text-[#b300ff]"><i class="fa-solid fa-bullseye"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold">Sniper Entries</h4>
+                            <p class="text-sm text-gray-400">No chasing. We wait for the setup to come to us.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start gap-4 p-3 glass-card border-l-4 border-l-[#00d0ff]">
+                        <div class="mt-1 text-[#00d0ff]"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div>
+                            <h4 class="text-white font-bold">Capital Preservation</h4>
+                            <p class="text-sm text-gray-400">Strict Stop-Loss discipline to protect your account from blowing up.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="features" class="py-24 relative bg-[rgba(11,15,36,0.5)] border-y border-[rgba(255,255,255,0.05)]">
+    <div class="absolute inset-0 z-0" style="background-image: linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px); background-size: 50px 50px;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-[#00d0ff] font-bold tracking-widest uppercase text-sm mb-3">Your Arsenal</h2>
+            <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white mb-6">EVERYTHING YOU NEED TO <br><span class="text-gradient-purple">SUCCEED</span></h3>
+            <p class="text-gray-400 max-w-2xl mx-auto">We provide the tools, the alerts, and the community. You bring the discipline.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="glass-card p-8 card-hover reveal">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#b300ff] to-[#7000ff] flex items-center justify-center text-white text-2xl mb-6 shadow-[0_0_20px_rgba(179,0,255,0.4)]">
+                    <i class="fa-solid fa-bell"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Daily Options Alerts</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Get real-time push notifications straight to your phone. We cover SPY, QQQ, and high-volume individual tech tickers. Exact entries, targets, and stops.
+                </p>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-100">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00d0ff] to-[#0055ff] flex items-center justify-center text-white text-2xl mb-6 shadow-[0_0_20px_rgba(0,208,255,0.4)]">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Small Account Friendly</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Not everyone starts with $25k. We specifically call out affordable options contracts that allow small accounts to safely grow without over-leveraging.
+                </p>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-200">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#00ff88] to-[#00aa55] flex items-center justify-center text-white text-2xl mb-6 shadow-[0_0_20px_rgba(0,255,136,0.4)]">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Active Community</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Trade alongside thousands of like-minded individuals. Ask questions, share your wins, and learn from experienced traders who actually reply to you.
+                </p>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal">
+                <div class="w-14 h-14 rounded-2xl bg-[#1a1a2e] border border-gray-700 flex items-center justify-center text-[#b300ff] text-2xl mb-6">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Technical Analysis</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    We don't just say "buy this." We post the charts and explain the exact setups (support/resistance, volume profile, trendlines) so you learn the *why*.
+                </p>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-100">
+                <div class="w-14 h-14 rounded-2xl bg-[#1a1a2e] border border-gray-700 flex items-center justify-center text-[#00d0ff] text-2xl mb-6">
+                    <i class="fa-solid fa-stopwatch"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Live Trade Updates</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    The market moves fast. We provide live updates on open trades—when to trim, when to hold runners, and when to cut a loss early to save capital.
+                </p>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-200 relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-[#b300ff] text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider">Earn</div>
+                <div class="w-14 h-14 rounded-2xl bg-[#1a1a2e] border border-[#b300ff] flex items-center justify-center text-[#b300ff] text-2xl mb-6">
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                </div>
+                <h4 class="text-xl font-bold text-white mb-3 font-orbitron">Massive Affiliate Program</h4>
+                <p class="text-gray-400 text-sm leading-relaxed">
+                    Get up to <strong class="text-white">55% recurring commissions</strong> just for inviting friends. You can literally pay for your membership by referring just two people.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+<section id="blueprint" class="py-24 relative overflow-hidden bg-[#030014]">
+    <div class="absolute inset-0 z-0 opacity-20" style="background-image: linear-gradient(#b300ff 1px, transparent 1px), linear-gradient(90deg, #b300ff 1px, transparent 1px); background-size: 100px 100px;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-[#00d0ff] font-bold tracking-widest uppercase text-sm mb-3">Your Journey</h2>
+            <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white mb-6">THE FLIGHT <span class="text-gradient-purple">MANUAL</span></h3>
+            <p class="text-gray-400 max-w-2xl mx-auto">We don't just throw alerts at you. We have a structured onboarding process designed to turn complete beginners into self-sufficient snipers.</p>
+        </div>
+
+        <div class="relative">
+            <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-[rgba(179,0,255,0.2)] via-[#00d0ff] to-[rgba(179,0,255,0.2)] transform -translate-y-1/2 z-0"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 relative z-10">
+                
+                <div class="glass-card p-8 text-center card-hover reveal hover:border-[#b300ff]/50">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#0b0f24] border-2 border-[#b300ff] flex items-center justify-center text-3xl text-white font-orbitron mb-6 shadow-[0_0_20px_rgba(179,0,255,0.4)] z-10 relative">
+                        01
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3 font-orbitron uppercase tracking-wide">The Boot Camp</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Access our comprehensive educational vault. Learn the basics of options, how to set up your broker, and how to read our specific callout format. You don't trade on day one; you study.
+                    </p>
+                    <div class="text-[10px] text-[#b300ff] uppercase tracking-widest font-bold">Duration: 2-3 Days</div>
+                </div>
+
+                <div class="glass-card p-8 text-center card-hover reveal delay-100 hover:border-[#00d0ff]/50">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#0b0f24] border-2 border-[#00d0ff] flex items-center justify-center text-3xl text-white font-orbitron mb-6 shadow-[0_0_20px_rgba(0,208,255,0.4)] z-10 relative">
+                        02
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3 font-orbitron uppercase tracking-wide">Simulation Mode</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Before risking real capital, you paper trade alongside our live alerts. Practice entering the contracts, setting stop losses, and scaling out at our exact price targets without the emotional pressure.
+                    </p>
+                    <div class="text-[10px] text-[#00d0ff] uppercase tracking-widest font-bold">Duration: 1-2 Weeks</div>
+                </div>
+
+                <div class="glass-card p-8 text-center card-hover reveal delay-200 hover:border-[#00ff88]/50">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-[#0b0f24] border-2 border-[#00ff88] flex items-center justify-center text-3xl text-white font-orbitron mb-6 shadow-[0_0_20px_rgba(0,255,136,0.4)] z-10 relative">
+                        03
+                    </div>
+                    <h4 class="text-xl font-bold text-white mb-3 font-orbitron uppercase tracking-wide">Live Execution</h4>
+                    <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                        Fund your account (even $300-$500 is enough). Start taking our A+ setups with real money. Apply the strict 10% stop-loss rule and watch your small account compound over time.
+                    </p>
+                    <div class="text-[10px] text-[#00ff88] uppercase tracking-widest font-bold">Status: Ongoing</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 relative bg-[#060918] border-t border-[rgba(255,255,255,0.05)]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <div class="reveal">
+                <h2 class="text-[#00ff88] font-bold tracking-widest uppercase text-sm mb-3">Survival Guide</h2>
+                <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white mb-8 leading-tight">
+                    THE 3 COMMANDMENTS OF <span class="text-gradient-green">MOON TRADES</span>
+                </h3>
+                
+                <div class="space-y-8">
+                    <div class="flex gap-6 items-start">
+                        <div class="text-3xl text-[#b300ff] opacity-80 mt-1"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white font-orbitron mb-2">I. Protect The Capital</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                We do not average down on losing options. If a trade hits our predetermined Stop Loss (usually 10-15%), we cut it immediately. Capital preservation is the only way to survive in this market. Live to trade another day.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 items-start">
+                        <div class="text-3xl text-[#00d0ff] opacity-80 mt-1"><i class="fa-solid fa-scissors"></i></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white font-orbitron mb-2">II. Secure The Bag Early</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                When an alert goes up 20% to 30%, we trim a portion of our position and move the Stop Loss to breakeven. From that point on, it is a risk-free trade. We never let a green trade turn red.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 items-start">
+                        <div class="text-3xl text-[#00ff88] opacity-80 mt-1"><i class="fa-solid fa-brain"></i></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-white font-orbitron mb-2">III. No Emotional Trading</h4>
+                            <p class="text-gray-400 text-sm leading-relaxed">
+                                FOMO (Fear Of Missing Out) kills accounts. If you miss the initial entry callout, you do not chase the premium. You sit on your hands and wait for the next setup. Discipline pays.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative reveal delay-200 hidden lg:block">
+                <div class="absolute inset-0 bg-gradient-to-tr from-[#00ff88] to-[#00d0ff] rounded-full blur-[100px] opacity-20 floating"></div>
+                <div class="glass-card border border-[rgba(255,255,255,0.1)] p-8 relative z-10">
+                    <div class="border-b border-gray-700 pb-4 mb-6">
+                        <span class="text-[#00d0ff] font-orbitron text-lg font-bold">DAILY BRIEFING</span>
+                    </div>
+                    <div class="space-y-4 font-inter text-sm text-gray-300">
+                        <p><strong class="text-white">Market Condition:</strong> High Volatility (VIX > 15)</p>
+                        <p><strong class="text-white">Focus Tickers:</strong> SPY, QQQ, NVDA</p>
+                        <p><strong class="text-white">Sizing:</strong> Max 5% of account per trade</p>
+                        <div class="bg-red-500/10 border border-red-500/30 p-4 rounded mt-4">
+                            <p class="text-red-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Warning</p>
+                            <p class="text-xs text-gray-400 mt-1">CPI Data releases at 8:30 AM EST. Do not hold overnight positions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="reviews" class="py-24 relative overflow-hidden bg-[#030014] border-y border-[rgba(255,255,255,0.05)]">
+    <div class="absolute inset-0 z-0 opacity-40" style="background-image: radial-gradient(circle at center, #b300ff 0%, transparent 10%); background-size: 100px 100px;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 reveal">
+            <div>
+                <h2 class="text-[#00ff88] font-bold tracking-widest uppercase text-sm mb-3">Field Reports</h2>
+                <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white leading-tight">
+                    COMMUNICATIONS FROM <br><span class="text-gradient-green">THE MOON.</span>
+                </h3>
+            </div>
+            <div class="mt-6 md:mt-0 glass-card px-6 py-3 border border-yellow-500/30 flex items-center gap-4 rounded-xl shadow-[0_0_20px_rgba(234,179,8,0.1)]">
+                <div class="flex text-yellow-400 text-lg">
+                    <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+                <div class="text-white font-bold font-orbitron">5.0 <span class="text-gray-500 text-sm font-inter font-normal">/ 200+ Reviews</span></div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="glass-card p-8 card-hover reveal relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-6xl text-[rgba(255,255,255,0.03)]"><i class="fa-solid fa-quote-right"></i></div>
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"Started with a $500 account. Moon's exact entries and strict risk management helped me grow it to $3,200 in just one month. The SPY callouts are literally sniper precise. Best community out there."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#b300ff] to-[#00d0ff] flex items-center justify-center font-bold text-white font-orbitron shadow-lg">TJ</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Tyler J.</h5>
+                        <p class="text-[10px] text-[#00d0ff] tracking-widest uppercase">Verified Astronaut</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-100 relative overflow-hidden border-[#b300ff]/40 shadow-[0_0_30px_rgba(179,0,255,0.1)] transform md:-translate-y-4">
+                <div class="absolute top-0 right-0 bg-[#b300ff] text-white text-[10px] font-bold px-3 py-1 rounded-bl-lg uppercase tracking-wider z-20">Top Rated</div>
+                <div class="absolute -right-4 -top-4 text-6xl text-[rgba(179,0,255,0.05)]"><i class="fa-solid fa-quote-right"></i></div>
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"I've been in 5 different signal groups. Moon Trades is the only one where the admins actually teach you the 'why' behind the trade. I'm no longer blindly following; I'm learning the charts. Worth every penny."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#00ff88] to-[#00d0ff] flex items-center justify-center font-bold text-white font-orbitron shadow-lg">MK</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Mike K.</h5>
+                        <p class="text-[10px] text-[#00d0ff] tracking-widest uppercase">Verified Astronaut</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-200 relative overflow-hidden">
+                <div class="absolute -right-4 -top-4 text-6xl text-[rgba(255,255,255,0.03)]"><i class="fa-solid fa-quote-right"></i></div>
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"The voice channel during market open is insane. Listening to the live breakdown of QQQ levels before the move happens gives you so much confidence. If you want to make money, this is the place."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#00d0ff] to-[#7000ff] flex items-center justify-center font-bold text-white font-orbitron shadow-lg">SR</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Sarah R.</h5>
+                        <p class="text-[10px] text-[#00d0ff] tracking-widest uppercase">Verified Astronaut</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card p-8 card-hover reveal relative overflow-hidden hidden md:block">
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"Joined Moon Trades a week ago and already made back my monthly fee 4 times over. The risk management rules they enforce literally save you from blowing your account."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-[#1a1a2e] border border-gray-700 flex items-center justify-center font-bold text-white font-orbitron">AL</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Alex L.</h5>
+                        <p class="text-[10px] text-gray-500 tracking-widest uppercase">Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-100 relative overflow-hidden hidden md:block">
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"Lifetime is an absolute steal. The educational content alone is worth $1000+. But getting the live updates and exact trim levels during volatile markets is where the real value is."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-[#1a1a2e] border border-gray-700 flex items-center justify-center font-bold text-white font-orbitron">JN</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Jason N.</h5>
+                        <p class="text-[10px] text-[#00ff88] tracking-widest uppercase">Lifetime VIP</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 card-hover reveal delay-200 relative overflow-hidden hidden lg:block">
+                <div class="flex text-yellow-400 text-sm mb-6"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                <p class="text-gray-300 font-light leading-relaxed mb-8 relative z-10 text-sm">"I was skeptical because of how many bad discords exist. But Moon Trades is different. No fake promises, just mechanical trading, strict stop losses, and high probability setups."</p>
+                <div class="flex items-center gap-4 border-t border-[rgba(255,255,255,0.05)] pt-6">
+                    <div class="w-10 h-10 rounded-full bg-[#1a1a2e] border border-gray-700 flex items-center justify-center font-bold text-white font-orbitron">EW</div>
+                    <div>
+                        <h5 class="text-white font-bold text-sm">Ethan W.</h5>
+                        <p class="text-[10px] text-gray-500 tracking-widest uppercase">Member</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<section id="pricing" class="py-32 relative bg-[#060918] border-y border-[rgba(255,255,255,0.05)] overflow-hidden">
+    <div class="glow-orb-purple top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-60"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <div class="text-center mb-20 reveal">
+            <h2 class="text-[#b300ff] font-bold tracking-widest uppercase text-sm mb-3">Requisition Form</h2>
+            <h3 class="text-4xl md:text-5xl font-orbitron font-bold text-white mb-6">SECURE YOUR <span class="text-gradient-blue">BOARDING PASS</span></h3>
+            <p class="text-gray-400 max-w-xl mx-auto">Choose your flight plan. Whether you want to pay monthly from your profits or secure lifetime access at a massive discount.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            
+            <div class="glass-card rounded-3xl overflow-hidden border border-gray-800 hover:border-[#b300ff]/50 transition-all duration-500 reveal flex flex-col relative group z-10">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#b300ff] to-[#00d0ff]"></div>
+                
+                <div class="p-10 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.3)]">
+                    <h4 class="font-orbitron text-3xl text-white mb-2 font-bold">Moon Full Access</h4>
+                    <p class="text-gray-400 text-sm">Everything you need to grow your account, billed monthly.</p>
+                    <div class="mt-8 flex items-end gap-2">
+                        <span class="text-6xl font-orbitron font-black text-white">$39.99</span>
+                    </div>
+                    <div class="text-gray-500 font-bold mt-2 uppercase tracking-widest text-xs">Billed every month</div>
+                </div>
+                
+                <div class="p-10 flex-1 flex flex-col">
+                    <ul class="space-y-5 mb-10 flex-1">
+                        <li class="flex items-start gap-4 text-gray-300 text-sm"><i class="fa-solid fa-check text-[#00d0ff] mt-1 text-lg"></i> <span class="leading-relaxed">Access to all Expert Options Alerts (SPY, QQQ, Tech)</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm"><i class="fa-solid fa-check text-[#00d0ff] mt-1 text-lg"></i> <span class="leading-relaxed">Live Voice Trading & Market Open Breakdowns</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm"><i class="fa-solid fa-check text-[#00d0ff] mt-1 text-lg"></i> <span class="leading-relaxed">Full Technical Analysis & Chart Markups</span></li>
+                        <li class="flex items-start gap-4 text-[#b300ff] font-bold text-sm"><i class="fa-solid fa-bolt text-[#b300ff] mt-1 text-lg"></i> <span class="leading-relaxed">55% Massive Affiliate Commission</span></li>
+                    </ul>
+                    <a href="https://whop.com/moontrades/moontrades?a=digitalartlab" target="_blank" class="w-full py-5 rounded-xl border-2 border-[#b300ff] text-[#b300ff] hover:bg-[#b300ff] hover:text-white font-orbitron font-bold tracking-widest text-center transition-all text-lg">
+                        SELECT MONTHLY
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl overflow-hidden border-2 border-[#00d0ff]/60 shadow-[0_0_40px_rgba(0,208,255,0.2)] hover:shadow-[0_0_60px_rgba(0,208,255,0.4)] transition-all duration-500 reveal delay-100 flex flex-col relative transform md:-translate-y-6 z-20">
+                <div class="absolute top-0 right-0 bg-gradient-to-r from-[#00d0ff] to-[#00ff88] text-[#030014] font-black text-xs px-5 py-2 rounded-bl-xl uppercase tracking-widest font-orbitron z-10 shadow-lg">Most Popular</div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#00d0ff] to-[#00ff88]"></div>
+                
+                <div class="p-10 border-b border-[rgba(0,208,255,0.1)] bg-[rgba(0,208,255,0.08)]">
+                    <h4 class="font-orbitron text-3xl text-white mb-2 font-bold">Moon Lifetime</h4>
+                    <p class="text-[#00d0ff] text-sm font-medium">Pay once. Never pay again. Full permanent access.</p>
+                    <div class="mt-8 flex items-end gap-2">
+                        <span class="text-6xl font-orbitron font-black text-white">$250.00</span>
+                    </div>
+                    <div class="text-[#00d0ff] font-bold mt-2 uppercase tracking-widest text-xs">One-time payment</div>
+                </div>
+                
+                <div class="p-10 flex-1 flex flex-col">
+                    <ul class="space-y-5 mb-10 flex-1">
+                        <li class="flex items-start gap-4 text-white font-bold text-sm"><i class="fa-solid fa-infinity text-[#00ff88] mt-1 text-lg"></i> <span class="leading-relaxed">Lifetime Access to everything in Monthly</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm"><i class="fa-solid fa-check text-[#00ff88] mt-1 text-lg"></i> <span class="leading-relaxed">Pays for itself in under 7 months</span></li>
+                        <li class="flex items-start gap-4 text-gray-300 text-sm"><i class="fa-solid fa-check text-[#00ff88] mt-1 text-lg"></i> <span class="leading-relaxed">VIP Discord Role & Priority Support</span></li>
+                        <li class="flex items-start gap-4 text-[#00d0ff] font-bold text-sm"><i class="fa-solid fa-bolt text-[#00d0ff] mt-1 text-lg"></i> <span class="leading-relaxed">30% Lifetime Affiliate Commission</span></li>
+                    </ul>
+                    <a href="https://whop.com/moontrades/yearly-access-b3?a=digitalartlab" target="_blank" class="w-full py-5 rounded-xl btn-primary font-orbitron font-bold tracking-widest text-center transition-all text-lg shadow-[0_0_20px_rgba(0,208,255,0.4)] hover:scale-105">
+                        SECURE LIFETIME
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="mt-16 text-center reveal delay-200 border-t border-[rgba(255,255,255,0.05)] pt-10">
+            <h4 class="text-white font-orbitron font-bold text-xl mb-4">What happens after purchase?</h4>
+            <p class="text-gray-400 text-sm max-w-2xl mx-auto mb-8 font-light leading-relaxed">
+                As soon as your payment is processed via Whop, you will instantly be redirected to connect your Discord account. Our automated system will grant you your roles and unlock all premium channels within 5 seconds. Welcome aboard.
+            </p>
+            <a href="https://whop.com/moontrades?a=digitalartlab" target="_blank" class="text-[#b300ff] hover:text-[#00d0ff] font-bold text-sm underline underline-offset-4 transition-colors">Visit the main Moon Trades hub & view all plans &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<section class="py-24 relative overflow-hidden bg-[#030014]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-16 reveal">
+            <h2 class="text-3xl md:text-4xl font-orbitron font-bold text-white uppercase mb-4">Transmission <span class="text-[#00d0ff]">Logs</span> (FAQ)</h2>
+            <div class="w-16 h-1 bg-gradient-to-r from-[#b300ff] to-[#00d0ff] mx-auto rounded"></div>
+        </div>
+
+        <div class="space-y-4">
+            
+            <div class="glass-card border border-gray-800 rounded-xl overflow-hidden reveal">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-wide font-orbitron text-sm md:text-base">Do I need a large account to trade Options?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[#b300ff] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-6 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-4 font-light">
+                        Not at all. The beauty of Moon Trades is that we specifically tailor setups for smaller accounts. You can start with as little as $300-$500. We teach you strict risk management so you only risk 5-10% of your account per trade, allowing you to grow it safely.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card border border-gray-800 rounded-xl overflow-hidden reveal delay-100">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-wide font-orbitron text-sm md:text-base">What broker should I use?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[#b300ff] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-6 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-4 font-light">
+                        We recommend Webull, ThinkOrSwim (TD Ameritrade/Schwab), or Interactive Brokers for their fast execution and solid charts. Robinhood is acceptable for beginners, but moving to a more advanced broker will help you execute our entries and exits faster.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card border border-gray-800 rounded-xl overflow-hidden reveal delay-200">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-wide font-orbitron text-sm md:text-base">I am a complete beginner, is this for me?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[#b300ff] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-6 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-4 font-light">
+                        Yes! Moon Trades has a dedicated educational section that explains what calls and puts are, how to read candlestick charts, and how to set up your broker. Plus, our active community and admins are always there to answer your questions in the chat.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card border border-gray-800 rounded-xl overflow-hidden reveal">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-wide font-orbitron text-sm md:text-base">How does the Affiliate Program work?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[#b300ff] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-6 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-4 font-light">
+                        When you sign up via Whop, you get a custom affiliate link. If anyone joins using your link, you get a massive 55% (for monthly) or 30% (for lifetime) of their subscription fee directly deposited to you every single month they stay. Invite just 2 friends, and your membership is literally free.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-card border border-gray-800 rounded-xl overflow-hidden reveal delay-100">
+                <button class="w-full px-8 py-6 text-left flex justify-between items-center focus:outline-none faq-btn transition-colors hover:bg-[rgba(255,255,255,0.02)]">
+                    <span class="font-bold text-white tracking-wide font-orbitron text-sm md:text-base">Can I cancel my subscription at any time?</span>
+                    <i class="fa-solid fa-plus accordion-icon text-[#b300ff] transition-transform duration-300 text-xl"></i>
+                </button>
+                <div class="accordion-content max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out">
+                    <div class="px-8 pb-6 text-gray-400 text-sm leading-relaxed border-t border-gray-800 pt-4 font-light">
+                        Absolutely. You have full control over your billing via the Whop dashboard. You can cancel, pause, or upgrade your membership to lifetime at any given moment with zero hassle or hidden fees.
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer class="bg-[#030014] pt-24 pb-12 border-t-2 border-[#b300ff]/20 relative overflow-hidden">
+    <i class="fa-solid fa-rocket absolute -bottom-20 -right-10 text-[rgba(255,255,255,0.02)] text-[500px] z-0 pointer-events-none transform -rotate-45"></i>
+
+    <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#00d0ff] to-transparent opacity-50"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-16 mb-20">
+            
+            <div class="lg:col-span-5">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#b300ff] to-[#00d0ff] flex items-center justify-center shadow-[0_0_20px_rgba(179,0,255,0.4)]">
+                        <i class="fa-solid fa-moon text-white text-xl"></i>
+                    </div>
+                    <span class="font-orbitron font-black text-white text-3xl tracking-widest">MOON TRADES</span>
+                </div>
+                <p class="text-gray-500 font-light text-sm max-w-sm mb-8 leading-loose">
+                    Stop trading blind. Join the ultimate options community. Sniper entries, strict risk management, and live education. It's time to take your portfolio to the moon.
+                </p>
+                <div class="flex gap-5">
+                    <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-[#b300ff] hover:bg-[#b300ff]/10 hover:shadow-[0_0_20px_rgba(179,0,255,0.5)] transition-all duration-300 text-xl"><i class="fa-brands fa-discord"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-[#00d0ff] hover:bg-[#00d0ff]/10 hover:shadow-[0_0_20px_rgba(0,208,255,0.5)] transition-all duration-300 text-xl"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="w-12 h-12 rounded-full glass-card flex items-center justify-center text-gray-400 hover:text-white hover:border-[#00ff88] hover:bg-[#00ff88]/10 hover:shadow-[0_0_20px_rgba(0,255,136,0.5)] transition-all duration-300 text-xl"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-3 lg:col-start-7">
+                <h4 class="font-orbitron text-white text-lg tracking-widest uppercase mb-8 border-b border-[rgba(255,255,255,0.1)] pb-3">Navigation</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-inter">
+                    <li><a href="#about" class="hover:text-[#00d0ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#b300ff]"></i> The Mission</a></li>
+                    <li><a href="#features" class="hover:text-[#00d0ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#b300ff]"></i> Trade Arsenal</a></li>
+                    <li><a href="#reviews" class="hover:text-[#00d0ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#b300ff]"></i> Testimonials</a></li>
+                    <li><a href="#pricing" class="hover:text-[#00d0ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#b300ff]"></i> Boarding Passes</a></li>
+                    <li><a href="https://whop.com/moontrades?a=digitalartlab" class="hover:text-[#00d0ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#b300ff]"></i> Member Login</a></li>
+                </ul>
+            </div>
+
+            <div class="lg:col-span-3">
+                <h4 class="font-orbitron text-white text-lg tracking-widest uppercase mb-8 border-b border-[rgba(255,255,255,0.1)] pb-3">Legal Control</h4>
+                <ul class="space-y-4 text-sm text-gray-400 font-inter">
+                    <li><a href="#" class="hover:text-[#b300ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#00d0ff]"></i> Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-[#b300ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#00d0ff]"></i> Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-[#b300ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#00d0ff]"></i> Refund Policy</a></li>
+                    <li><a href="#" class="hover:text-[#b300ff] transition-colors flex items-center gap-2"><i class="fa-solid fa-angle-right text-[10px] text-[#00d0ff]"></i> Risk Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-[rgba(255,255,255,0.05)] pt-10 flex flex-col lg:flex-row justify-between items-center gap-8 text-center lg:text-left">
+            <p class="font-orbitron text-[11px] text-gray-500 tracking-[0.2em] uppercase">
+                &copy; 2026 MOON TRADES. ALL SYSTEMS OPERATIONAL.
+            </p>
+            <p class="text-[9px] text-gray-600 max-w-4xl leading-relaxed uppercase font-inter tracking-wider">
+                Options trading entails significant risk and is not appropriate for all investors. Certain complex options strategies carry additional risk. Before trading options, please read Characteristics and Risks of Standardized Options. Moon Trades is an educational platform and does not provide financial advice. Past performance is not indicative of future results. Please consult with a financial professional before making any investment decisions.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- Navigation Scroll Effect ---
+        const nav = document.getElementById('navbar');
+        const innerNav = nav.querySelector('.glass-card') || nav.querySelector('div > div:first-child');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                nav.classList.add('bg-[rgba(11,15,36,0.95)]', 'backdrop-blur-2xl', 'border-b', 'border-[rgba(255,255,255,0.08)]', 'shadow-2xl');
+                nav.style.top = '0';
+                if(innerNav) {
+                    innerNav.classList.remove('glass-card', 'border', 'px-6', 'py-3', 'rounded-full');
+                    innerNav.classList.add('bg-transparent', 'border-transparent', 'py-2');
+                }
+            } else {
+                nav.classList.remove('bg-[rgba(11,15,36,0.95)]', 'backdrop-blur-2xl', 'border-b', 'border-[rgba(255,255,255,0.08)]', 'shadow-2xl');
+                nav.style.top = '32px';
+                if(innerNav) {
+                    innerNav.classList.add('glass-card', 'border', 'px-6', 'py-3', 'rounded-full');
+                    innerNav.classList.remove('bg-transparent', 'border-transparent', 'py-2');
+                }
+            }
+        });
+
+        // --- Intersection Observer for Scroll Animations ---
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // Run animation only once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Fallback for elements already in viewport on load
+        setTimeout(() => {
+            document.querySelectorAll('.reveal:not(.active)').forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if (rect.top < window.innerHeight) {
+                    el.classList.add('active');
+                }
+            });
+        }, 500);
+
+        // --- Advanced FAQ Accordion Logic ---
+        const faqButtons = document.querySelectorAll('.faq-btn');
+        
+        faqButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('.accordion-icon');
+                const isOpen = content.classList.contains('opacity-100');
+
+                // 1. Close all other accordions
+                document.querySelectorAll('.accordion-content').forEach(c => {
+                    c.style.maxHeight = null;
+                    c.classList.remove('opacity-100');
+                    c.classList.add('opacity-0');
+                });
+                document.querySelectorAll('.accordion-icon').forEach(i => {
+                    i.classList.remove('rotate-45', 'text-[#00ff88]');
+                    i.classList.add('text-[#b300ff]');
+                });
+                document.querySelectorAll('.faq-btn').forEach(b => {
+                    b.classList.remove('bg-[rgba(255,255,255,0.03)]');
+                });
+
+                // 2. Open current if it was closed
+                if (!isOpen) {
+                    this.classList.add('bg-[rgba(255,255,255,0.03)]'); // Highlight button
+                    content.classList.remove('opacity-0');
+                    content.classList.add('opacity-100');
+                    content.style.maxHeight = content.scrollHeight + "px"; // Dynamic height
+                    icon.classList.add('rotate-45', 'text-[#00ff88]'); // Turn plus into X and turn green
+                    icon.classList.remove('text-[#b300ff]');
+                }
+            });
+        });
+
+        // --- Mouse Parallax for Glow Orbs ---
+        const orbs = document.querySelectorAll('.glow-orb-purple, .glow-orb-blue');
+        
+        if (window.matchMedia("(min-width: 1024px)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.clientX / window.innerWidth - 0.5) * 2; // Range -1 to 1
+                const y = (e.clientY / window.innerHeight - 0.5) * 2;
+                
+                orbs.forEach((orb, index) => {
+                    const speed = (index + 1) * 30; // Different speed for depth
+                    orb.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
+                });
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
